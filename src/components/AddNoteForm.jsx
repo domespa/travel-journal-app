@@ -91,7 +91,7 @@ export default function AddNoteForm({ onNoteAdded }) {
       <div className="row justify-content-center">
         <div className="col-sm-10 col-md-8 col-lg-6">
           <div className="card shadow-lg">
-            <div className="card-header bg-primary text-white p-3">
+            <div className="card-header bg-primary text-white p-3 text-center">
               <h4>Aggiungi un Viaggio</h4>
             </div>
 
