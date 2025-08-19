@@ -87,7 +87,7 @@ export default function AddNoteForm({ onNoteAdded }) {
   };
 
   return (
-    <div className="container">
+    <div className="container mb-5 mt-5">
       <div className="row justify-content-center">
         <div className="col-sm-10 col-md-8 col-lg-6">
           <div className="card shadow-lg">

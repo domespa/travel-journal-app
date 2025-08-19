@@ -8,6 +8,20 @@
 }
 
 /* =====================================
+            GENERAL
+===================================== */
+body {
+  background-image: url("/jumb.jpg");
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+main {
+  margin: 100px;
+  background-color: rgba(240, 248, 255, 0.9);
+}
+/* =====================================
             CARD
 ===================================== */
 .cardImg {
