@@ -13,3 +13,14 @@ GIORNO 2
 Creazione componente NoteCard e anche questo pronto da passare al genitore. Creata funzione Helper per gestire al meglio le emoji.
 Aggiunto ad App.jsx e funziona tutto come dovrebbe. 
 In homepage penso che terrò solo i viaggi e poi tramite un button farò aprire una modale per l'aggiunta del viaggio. Userò reactPortal per farlo.
+
+GIORNO 3
+Come detto ieri ho sistemato la modalità di aggiunta viaggio tramite una modal, 
+messa fuori il normale flusso per non creare probabili problemi al layout, con reactportal.
+Mi sono copiato ed incollato dalla mia libreria, la searchbar e il debounce
+(in questo progetto non credo serva visto che comunque non ci saranno così tante "chiamate", 
+però ormai la uso come best practice in ogni mio progetto).
+Aggiunto il context per rendere la pagina App.jsx con meno codice.
+Ho preferito usare le modali per aprire la scheda del dettaglio viaggio, avrei potuto utilizzare 
+react router e con useNavigate navigare per le pagine ma ho preferito cambiare.
+

@@ -1,53 +1,48 @@
 // SUPABASE & FORMATDATE
 import { supabase } from "./utils/supabase";
-import { formatDate, formatDateOnly } from "./utils/date";
 
 // HOOK
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
+
+// CONTEXT
+import { TravelContext } from "./context/TravelContext";
 
 // COMPONENTS
 import NoteCard from "./components/NoteCard";
 import Modal from "./components/Modal";
+import DetailModal from "./components/DetailModal";
+import Searchbar from "./components/Searchbar";
 
 export default function App() {
-  const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { notes, handleNoteAdded, loading, error } = useContext(TravelContext);
   const [show, setShow] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [search, setSearch] = useState("");
+
+  // FUNZIONI PER APRIRE E CHIUDERE LE MODAL SELEZIONATE
+  const handleOpenNote = (n) => {
+    setSelectedNote(n);
+    setShowDetailModal(true);
+  };
+
+  const handleCloseNote = () => {
+    setShowDetailModal(false);
+    setSelectedNote(null);
+  };
+
+  // FILTRAGGIO VIAGGI
+  const filteredNotes = notes.filter((n) => {
+    if (!search) return true;
+
+    return (
+      n.location.toLowerCase().includes(search.toLowerCase()) ||
+      n.mood.toLowerCase().includes(search.toLowerCase()) ||
+      n.title.toLowerCase().includes(search.toLowerCase())
+    );
+  });
 
   const placeHolder = "https://placehold.co/400x200";
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
-  const fetchNotes = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      console.log("Caricamento note");
-
-      const { data, error } = await supabase
-        .from(`travel_notes`)
-        .select(`*`)
-        .order(`created_at`, { ascending: false });
-
-      if (error) throw error;
-
-      setNotes(data);
-      console.log("Note caricate", data);
-    } catch (error) {
-      console.error("Errore nel caricamento delle note", error.message);
-      setError(error.message || "Errore nel caricamento");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleNoteAdded = (newNote) => {
-    setNotes((prev) => [newNote, ...prev]);
-    setShow(false);
-  };
 
   return (
     <>
@@ -64,19 +59,15 @@ export default function App() {
           <div className="container mb-4">
             <div className="alert alert-danger d-flex justify-content-between align-items-center">
               <span>❌ {error}</span>
-              <button
-                className="btn btn-sm btn-outline-danger"
-                onClick={fetchNotes}
-              >
-                🔄 Riprova
-              </button>
             </div>
           </div>
         )}
 
         {/* VIAGGI */}
         <div className="container pt-5">
-          <h3 className="mb-4">📋 I tuoi viaggi ({notes.length})</h3>
+          <h3 className="mb-4">📋 I tuoi viaggi ({filteredNotes.length})</h3>
+
+          <Searchbar search={search} setSearch={setSearch} />
 
           {loading ? (
             <div className="text-center py-5">
@@ -85,32 +76,52 @@ export default function App() {
               </div>
               <p className="mt-2">Caricamento viaggi...</p>
             </div>
-          ) : notes.length === 0 ? (
+          ) : filteredNotes.length === 0 ? (
             <div className="text-center py-5">
               <h4 className="text-muted">🎒 Nessun viaggio ancora</h4>
               <p className="text-muted">Aggiungi la tua prima esperienza!</p>
             </div>
           ) : (
-            <div className="row">
-              {notes.map((note) => (
-                <NoteCard key={note.id} note={note} placeHolder={placeHolder} />
+            <div className="row pt-5">
+              {filteredNotes.map((note) => (
+                <NoteCard
+                  key={note.id}
+                  note={note}
+                  placeHolder={placeHolder}
+                  onClick={handleOpenNote}
+                />
               ))}
             </div>
           )}
         </div>
         <div>
-          <div className="container">
-            <button className="btn btn-primary" onClick={() => setShow(true)}>
-              ✈️ Aggiungi Viaggio
-            </button>
+          <button
+            className="btn btn-warning position-fixed bottom-0 end-0 m-3"
+            onClick={() => setShow(true)}
+          >
+            ✈️ Aggiungi
+          </button>
 
-            <Modal
-              title="Aggiungi un Nuovo Viaggio"
-              show={show}
-              onClose={() => setShow(false)}
-              onNoteAdded={handleNoteAdded}
+          {/* MODALE AGGIUNTA VIAGGIO */}
+          <Modal
+            title="Aggiungi un Nuovo Viaggio"
+            show={show}
+            onClose={() => setShow(false)}
+            onNoteAdded={(newNote) => {
+              handleNoteAdded(newNote);
+              setShow(false);
+            }}
+          />
+
+          {/* MODALE VIAGGIO */}
+          {selectedNote && (
+            <DetailModal
+              note={selectedNote}
+              show={showDetailModal}
+              onClose={handleCloseNote}
+              placeHolder={placeHolder}
             />
-          </div>
+          )}
         </div>
       </main>
     </>

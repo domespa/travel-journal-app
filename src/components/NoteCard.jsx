@@ -1,6 +1,6 @@
 import { formatDate, formatDateOnly } from "../utils/date";
 
-export default function NoteCard({ note, placeHolder }) {
+export default function NoteCard({ note, placeHolder, onClick }) {
   // FUNZIONE HELPER PER GESTIRE IL MOOD
   const getMoodEmoji = (mood) => {
     const moods = {
@@ -15,8 +15,12 @@ export default function NoteCard({ note, placeHolder }) {
   };
 
   return (
-    <div className="col-md-6 col-lg-4 mb-4">
-      <div className="card h-100 shadow-sm hover-card">
+    <div className="col-md-6 col-lg-3 mb-4">
+      <div
+        className="card h-100 shadow-sm"
+        onClick={() => onClick(note)}
+        style={{ cursor: "pointer" }}
+      >
         {/* IMMAGINE */}
         <img
           src={note.image_url || placeHolder}
