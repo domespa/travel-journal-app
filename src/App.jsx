@@ -6,13 +6,14 @@ import { formatDate, formatDateOnly } from "./utils/date";
 import { useEffect, useState } from "react";
 
 // COMPONENTS
-import AddNoteForm from "./components/AddNoteForm";
 import NoteCard from "./components/NoteCard";
+import Modal from "./components/Modal";
 
 export default function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [show, setShow] = useState(false);
 
   const placeHolder = "https://placehold.co/400x200";
 
@@ -43,10 +44,10 @@ export default function App() {
     }
   };
 
-  // ----------------- INICIO TEST DATA
-  // console.log(formatDate(new Date().toISOString()));
-  // console.log(formatDateOnly(new Date().toISOString()));
-  // ----------------- FINE TEST DATA
+  const handleNoteAdded = (newNote) => {
+    setNotes((prev) => [newNote, ...prev]);
+    setShow(false);
+  };
 
   return (
     <>
@@ -97,11 +98,20 @@ export default function App() {
             </div>
           )}
         </div>
+        <div>
+          <div className="container">
+            <button className="btn btn-primary" onClick={() => setShow(true)}>
+              ✈️ Aggiungi Viaggio
+            </button>
 
-        {/* AGGIUNGI VIAGGIO */}
-        <AddNoteForm
-          onNoteAdded={(newNote) => setNotes((prev) => [newNote, ...prev])}
-        />
+            <Modal
+              title="Aggiungi un Nuovo Viaggio"
+              show={show}
+              onClose={() => setShow(false)}
+              onNoteAdded={handleNoteAdded}
+            />
+          </div>
+        </div>
       </main>
     </>
   );

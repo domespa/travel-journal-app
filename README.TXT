@@ -8,3 +8,8 @@ Creato date.js per gestire al meglio la formattazione delle date.
 Creato componente AddNoteForm.jsx, testato e funzionante pronto da passare al genitore. 
 Per lo stile sto utilizzando bootstrap(per i suoi breakpoint già impostati) perchè ho letto sempre da "risorse" qualcosa riguardo la PWA, 
 quindi sto sviluppando in mobilefirst. 
+
+GIORNO 2
+Creazione componente NoteCard e anche questo pronto da passare al genitore. Creata funzione Helper per gestire al meglio le emoji.
+Aggiunto ad App.jsx e funziona tutto come dovrebbe. 
+In homepage penso che terrò solo i viaggi e poi tramite un button farò aprire una modale per l'aggiunta del viaggio. Userò reactPortal per farlo.
