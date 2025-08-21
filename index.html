@@ -18,6 +18,17 @@
     <div id="root"></div>
 
     <div id="modal-root"></div>
+    <script>
+      const success = (position) => {
+        console.log(position);
+      };
+
+      const error = (error) => {
+        console.log(error);
+      };
+
+      navigator.geolocation.getCurrentPosition(success, error);
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
