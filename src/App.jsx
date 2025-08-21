@@ -12,6 +12,7 @@ import NoteCard from "./components/NoteCard";
 import Modal from "./components/Modal";
 import DetailModal from "./components/DetailModal";
 import Searchbar from "./components/Searchbar";
+import TravelMap from "./components/TravelMap";
 
 export default function App() {
   const { notes, handleNoteAdded, loading, error } = useContext(TravelContext);
@@ -62,6 +63,17 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* MAPPA */}
+        <div className="container mt-4">
+          <TravelMap
+            notes={notes}
+            onMarkerClick={(note) => {
+              setSelectedNote(note);
+              setShowDetailModal(true);
+            }}
+          />
+        </div>
 
         {/* VIAGGI */}
         <div className="container pt-5">
