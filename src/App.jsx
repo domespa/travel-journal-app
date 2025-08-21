@@ -2,7 +2,7 @@
 import { supabase } from "./utils/supabase";
 
 // HOOK
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 // CONTEXT
 import { TravelContext } from "./context/TravelContext";
@@ -20,6 +20,11 @@ export default function App() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [search, setSearch] = useState("");
+
+  // SCROLL TOP
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // FUNZIONI PER APRIRE E CHIUDERE LE MODAL SELEZIONATE
   const handleOpenNote = (n) => {
@@ -48,7 +53,7 @@ export default function App() {
   return (
     <>
       {/* HEADER */}
-      <header className="bg-primary text-white text-center py-2">
+      <header className=" text-center py-4">
         <div className="container">
           <h1 className="mb-0">🌍 Travel Journal 🌍</h1>
           <p className="mb-0">I tuoi viaggi e ricordi</p>
@@ -65,7 +70,7 @@ export default function App() {
         )}
 
         {/* MAPPA */}
-        <div className="container mt-4">
+        <div className="container p-4 defDiv">
           <TravelMap
             notes={notes}
             onMarkerClick={(note) => {
@@ -76,8 +81,8 @@ export default function App() {
         </div>
 
         {/* VIAGGI */}
-        <div className="container pt-5">
-          <h3 className="mb-4">📋 I tuoi viaggi ({filteredNotes.length})</h3>
+        <div className="container mt-5 p-4 defDiv">
+          <h4 className="mb-4">📋 I tuoi viaggi ({filteredNotes.length})</h4>
 
           <Searchbar search={search} setSearch={setSearch} />
 
@@ -90,8 +95,8 @@ export default function App() {
             </div>
           ) : filteredNotes.length === 0 ? (
             <div className="text-center py-5">
-              <h4 className="text-muted">🎒 Nessun viaggio ancora</h4>
-              <p className="text-muted">Aggiungi la tua prima esperienza!</p>
+              <h4 className="text-white">🎒 Nessun viaggio ancora</h4>
+              <p className="text-white ">Aggiungi la tua prima esperienza!</p>
             </div>
           ) : (
             <div className="row pt-5">

@@ -11,16 +11,28 @@
             GENERAL
 ===================================== */
 body {
-  background-image: url("/jumb.jpg");
+  /* background-image: url("/jumb.jpg");
   background-size: cover;
   background-position: top center;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
+  background-color: #38673a;
 }
 
 main {
-  margin: 100px;
-  background-color: rgba(240, 248, 255, 0.9);
+  margin: 50px 100px;
   padding: 10px;
+  border-radius: 12px;
+}
+
+header {
+  background-color: #fee7d2;
+  color: #38673a;
+}
+
+.defDiv {
+  background-color: #fcdfc6;
+  color: #38673a;
+  border-radius: 12px;
 }
 /* =====================================
             CARD
@@ -28,4 +40,5 @@ main {
 .cardImg {
   height: 200px;
   object-fit: cover;
+  width: "100%";
 }
