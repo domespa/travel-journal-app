@@ -247,6 +247,7 @@ export default function App() {
         <div>
           <button
             className="btn btn-warning position-fixed bottom-0 end-0 m-3"
+            style={{ zIndex: 9999 }}
             onClick={() => setShow(true)}
           >
             ✈️ Aggiungi
