@@ -130,7 +130,7 @@ export default function TravelMap({ notes, onMarkerClick }) {
   return (
     <div className="mb-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4 className="mb-0 text-center">🗺️ Dove sei Stato</h4>
+        <h4 className="mx-auto">🗺️ Dove sei Stato</h4>
         <div>
           {loadLocation && (
             <small className="text-muted me-2">🔄 Rilevando posizione...</small>
@@ -159,7 +159,7 @@ export default function TravelMap({ notes, onMarkerClick }) {
           width: "w-75",
           borderRadius: "8px",
           overflow: "hidden",
-          border: "2px solid #38673a",
+          border: "2px solid #dee2e6",
           margin: "auto",
         }}
       >

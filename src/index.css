@@ -42,3 +42,7 @@ header {
   object-fit: cover;
   width: "100%";
 }
+
+.cardBorder {
+  border: 2px solid #38673a;
+}

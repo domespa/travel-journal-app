@@ -24,3 +24,6 @@ Aggiunto il context per rendere la pagina App.jsx con meno codice.
 Ho preferito usare le modali per aprire la scheda del dettaglio viaggio, avrei potuto utilizzare 
 react router e con useNavigate navigare per le pagine ma ho preferito cambiare.
 
+GIORNO 4
+Aggiunta una funzione per localizzare la posizione del nostro utente,
+Con reactleaflet ho messo una mappa dove si riesce a tenere traccia dei viaggi e della posizione corrente.

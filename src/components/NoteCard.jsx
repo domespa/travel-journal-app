@@ -15,9 +15,9 @@ export default function NoteCard({ note, placeHolder, onClick }) {
   };
 
   return (
-    <div className="col-md-6 col-lg-3 mb-4">
+    <div className="col-md-6 col-lg-3 mb-4 ">
       <div
-        className="card h-100 shadow-sm"
+        className="card h-100 shadow-sm cardBorder"
         onClick={() => onClick(note)}
         style={{ cursor: "pointer" }}
       >
