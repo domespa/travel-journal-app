@@ -7,6 +7,9 @@ import { useContext, useEffect, useState } from "react";
 // CONTEXT
 import { TravelContext } from "./context/TravelContext";
 
+// UTILS
+import { takeDistance } from "./utils/distance";
+
 // COMPONENTS
 import NoteCard from "./components/NoteCard";
 import Modal from "./components/Modal";
@@ -20,6 +23,16 @@ export default function App() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
   const [search, setSearch] = useState("");
+  const [userLocation, setUserLocation] = useState(null);
+
+  // FILTRI
+  const [filters, setFilters] = useState({
+    mood: "",
+    tags: "",
+    maxExpense: "",
+    maxDistance: "",
+    sortBy: "date_desc",
+  });
 
   // SCROLL TOP
   useEffect(() => {
@@ -37,16 +50,125 @@ export default function App() {
     setSelectedNote(null);
   };
 
-  // FILTRAGGIO VIAGGI
-  const filteredNotes = notes.filter((n) => {
-    if (!search) return true;
+  // FILTRAGGIO VIAGGI AVANZATA
+  const getFilteredSortedNotes = () => {
+    let filtered = notes.filter((note) => {
+      //FILTRO TESTO
+      if (search) {
+        const searchMin = search.toLowerCase();
+        const text =
+          note.title?.toLowerCase().includes(searchMin) ||
+          note.location?.toLowerCase().includes(searchMin) ||
+          note.description?.toLowerCase().includes(searchMin) ||
+          note.mood?.toLowerCase().includes(searchMin);
+        if (!text) return false;
+      }
 
-    return (
-      n.location.toLowerCase().includes(search.toLowerCase()) ||
-      n.mood.toLowerCase().includes(search.toLowerCase()) ||
-      n.title.toLowerCase().includes(search.toLowerCase())
-    );
-  });
+      // FILTRO MOOD
+      if (filters.mood && note.mood !== filters.mood) {
+        return false;
+      }
+
+      // FILTRO TAG
+      if (filters.tags) {
+        const filteredTags = filters.tags
+          .toLowerCase()
+          .split(",")
+          .map((t) => t.trim());
+        const hasTag =
+          note.tags &&
+          note.tags.some((t) =>
+            filteredTags.some((ft) => t.toLowerCase().includes(ft))
+          );
+        if (!hasTag) return false;
+      }
+
+      // FILTRO SPESA
+      if (filters.maxExpense) {
+        const maxExp = parseFloat(filters.maxExpense);
+        if (!note.actual_expense || note.actual_expense > maxExp) {
+          return false;
+        }
+      }
+
+      // FILTRO DISTANZA
+      if (
+        filters.maxDistance &&
+        userLocation &&
+        note.latitude &&
+        note.longitude
+      ) {
+        const distance = takeDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          note.latitude,
+          note.longitude
+        );
+        const maxDist = parseFloat(filters.maxDistance);
+        if (distance > maxDist) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    //  ORDINAMENTO
+    filtered.sort((a, b) => {
+      switch (filters.sortBy) {
+        case "date_desc":
+          return new Date(b.date_visited) - new Date(a.date_visited);
+        case "date_asc":
+          return new Date(a.date_visited) - new Date(b.date_visited);
+        case "expense_desc":
+          return (b.actual_expense || 0) - (a.actual_expense || 0);
+        case "expense_asc":
+          return (a.actual_expense || 0) - (b.actual_expense || 0);
+        case "distance_asc":
+          if (userLocation && a.latitude && b.latitude) {
+            const distA = takeDistance(
+              userLocation.latitude,
+              userLocation.longitude,
+              a.latitude,
+              a.longitude
+            );
+            const distB = takeDistance(
+              userLocation.latitude,
+              userLocation.longitude,
+              b.latitude,
+              b.longitude
+            );
+            return distA - distB;
+          }
+        case "distance_desc":
+          if (userLocation && a.latitude && b.latitude) {
+            const distA = takeDistance(
+              userLocation.latitude,
+              userLocation.longitude,
+              a.latitude,
+              a.longitude
+            );
+            const distB = takeDistance(
+              userLocation.latitude,
+              userLocation.longitude,
+              b.latitude,
+              b.longitude
+            );
+            return distB - distA;
+          }
+        case "title_asc":
+          return a.title?.localeCompare(b.title) || 0;
+        case "title_desc":
+          return b.title?.localeCompare(a.title) || 0;
+        default:
+          return new Date(b.date_visited) - new Date(a.date_visited);
+      }
+    });
+
+    return filtered;
+  };
+
+  const filteredNotes = getFilteredSortedNotes();
 
   const placeHolder = "https://placehold.co/400x200";
 
@@ -77,6 +199,7 @@ export default function App() {
               setSelectedNote(note);
               setShowDetailModal(true);
             }}
+            onLocationUpdate={setUserLocation}
           />
         </div>
 
@@ -84,7 +207,15 @@ export default function App() {
         <div className="container mt-5 p-4 defDiv">
           <h4 className="mb-4">📋 I tuoi viaggi ({filteredNotes.length})</h4>
 
-          <Searchbar search={search} setSearch={setSearch} />
+          <Searchbar
+            search={search}
+            setSearch={setSearch}
+            filters={filters}
+            setFilters={setFilters}
+            userLocation={userLocation}
+            totalNotes={notes.length}
+            filteredCount={filteredNotes.length}
+          />
 
           {loading ? (
             <div className="text-center py-5">
@@ -95,17 +226,19 @@ export default function App() {
             </div>
           ) : filteredNotes.length === 0 ? (
             <div className="text-center py-5">
-              <h4 className="text-white">🎒 Nessun viaggio ancora</h4>
-              <p className="text-white ">Aggiungi la tua prima esperienza!</p>
+              <h4>🎒 Nessun viaggio ancora</h4>
+              <p>Aggiungi la tua prima esperienza!</p>
             </div>
           ) : (
-            <div className="row pt-5">
-              {filteredNotes.map((note) => (
+            <div className="row">
+              {filteredNotes.map((note, index) => (
                 <NoteCard
                   key={note.id}
                   note={note}
                   placeHolder={placeHolder}
+                  userLocation={userLocation}
                   onClick={handleOpenNote}
+                  index={index + 1}
                 />
               ))}
             </div>
@@ -137,6 +270,7 @@ export default function App() {
               show={showDetailModal}
               onClose={handleCloseNote}
               placeHolder={placeHolder}
+              userLocation={userLocation}
             />
           )}
         </div>

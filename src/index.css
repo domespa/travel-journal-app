@@ -46,3 +46,74 @@ header {
 .cardBorder {
   border: 2px solid #38673a;
 }
+
+/* =====================================
+            BUTTON
+===================================== */
+.btn-outline-primary {
+  color: #38673a;
+  border-color: #38673a;
+}
+.btn-outline-primary:hover {
+  background-color: #38673a;
+  border-color: #38673a;
+  color: #fcdfc6;
+}
+
+.btn-outline-reverse {
+  color: #fcdfc6;
+  border-color: #fcdfc6;
+  background-color: #38673a;
+}
+.btn-outline-reverse:hover {
+  background-color: #fcdfc6;
+  border-color: #38673a;
+  color: #38673a;
+}
+
+.btn-outline-warning {
+  color: #d63384;
+  border-color: #d63384;
+}
+.btn-outline-warning:hover {
+  background-color: #d63384;
+  color: #fcdfc6;
+}
+
+.btn-warning {
+  background-color: #fcdfc6;
+  border-color: #fcdfc6;
+  color: #38673a;
+}
+.btn-warning:hover {
+  background-color: #38673a;
+  color: #fcdfc6;
+}
+
+.btn-outline-light:hover {
+  background-color: #fcdfc6;
+  color: #38673a;
+}
+
+/* =====================================
+            INPUT FOCUS
+===================================== */
+.form-control:focus,
+.form-select:focus {
+  border-color: #38673a;
+  box-shadow: 0 0 0 0.2rem rgba(56, 103, 58, 0.25);
+  outline: none;
+}
+
+/* =====================================
+            MODAL
+===================================== */
+
+.modal-header.bg-primary {
+  background-color: #38673a !important;
+}
+
+.modal-body {
+  background-color: #fee7d2;
+  color: #38673a;
+}

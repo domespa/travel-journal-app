@@ -250,7 +250,9 @@ export default function AddNoteForm({ onNoteAdded }) {
           <button
             type="submit"
             disabled={loading}
-            className={`btn ${loading ? "btn-secondary" : "btn-primary"}`}
+            className={`btn ${
+              loading ? "btn-secondary" : "btn-outline-reverse"
+            }`}
           >
             {loading ? (
               <>

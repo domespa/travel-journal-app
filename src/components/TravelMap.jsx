@@ -1,7 +1,8 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Tooltip, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { getCurrentPosition } from "../utils/geolocation";
 import { useEffect, useState } from "react";
+import { takeDistance, formatDistance } from "../utils/distance";
 
 // ICONE
 delete L.Icon.Default.prototype._getIconUrl;
@@ -37,7 +38,7 @@ const currentLocationIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-export default function TravelMap({ notes, onMarkerClick }) {
+export default function TravelMap({ notes, onMarkerClick, onLocationUpdate }) {
   const [userLocation, setUserLocation] = useState(null);
   const [loadLocation, setLoadLocation] = useState(true);
   const [locErr, setLocErr] = useState(null);
@@ -59,10 +60,13 @@ export default function TravelMap({ notes, onMarkerClick }) {
       setLocErr(null);
 
       const position = await getCurrentPosition();
-      setUserLocation({
+      const location = {
         latitude: position.latitude,
         longitude: position.longitude,
-      });
+      };
+
+      setUserLocation(location);
+      onLocationUpdate?.(location);
 
       console.log("Ti pigghiai", position);
     } catch (error) {
@@ -89,7 +93,7 @@ export default function TravelMap({ notes, onMarkerClick }) {
 
   const mapCenter = getMapCenter();
   const zoomLevel =
-    notesWithCoords.length === 0 ? 4 : notesWithCoords.length === 1 ? 6 : 6;
+    notesWithCoords.length === 0 ? 2 : notesWithCoords.length === 1 ? 4 : 4;
 
   if (!mapReady) {
     return (
@@ -126,6 +130,21 @@ export default function TravelMap({ notes, onMarkerClick }) {
       </div>
     );
   }
+
+  // FUNZIONE PER CALCOLARE LA DISTANZA DA USER A PUNTO
+  const getDistance = (note) => {
+    if (!userLocation || !note.latitude || !note.longitude) {
+      return null;
+    }
+
+    const distance = takeDistance(
+      userLocation.latitude,
+      userLocation.longitude,
+      note.latitude,
+      note.longitude
+    );
+    return formatDistance(distance);
+  };
 
   return (
     <div className="mb-4">
@@ -175,7 +194,7 @@ export default function TravelMap({ notes, onMarkerClick }) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png"
             subdomains={["a", "b", "c", "d"]}
-            maxZoom={20}
+            maxZoom={10}
           />
 
           {/* MARKER POSIZIONE ATTUALE */}
@@ -184,60 +203,75 @@ export default function TravelMap({ notes, onMarkerClick }) {
               position={[userLocation.latitude, userLocation.longitude]}
               icon={currentLocationIcon}
             >
-              <Popup>
-                <div style={{ minWidth: "150px" }}>
-                  <h6 className="fw-bold mb-2">📍 Tu sei qui!</h6>
-                  <p className="mb-1">
-                    <strong>Lat:</strong> {userLocation.latitude.toFixed(4)}
-                  </p>
-                  <p className="mb-0">
-                    <strong>Lng:</strong> {userLocation.longitude.toFixed(4)}
-                  </p>
+              <Tooltip
+                direction="bot"
+                offset={[0, -10]}
+                opacity={0.9}
+                permanent={false}
+                sticky={true}
+              >
+                <div style={{ minWidth: "200px", fontSize: "1rem" }}>
+                  <div className="text-primary">
+                    <strong>🎯 Tu sei qui!</strong>
+                  </div>
+                  <div>
+                    <strong>📅</strong> {new Date().toLocaleDateString("it-IT")}
+                  </div>
                 </div>
-              </Popup>
+              </Tooltip>
             </Marker>
           )}
 
           {/* MARKER VIAGGI */}
-          {notesWithCoords.map((note) => (
-            <Marker
-              key={note.id}
-              position={[note.latitude, note.longitude]}
-              icon={travelIcon}
-              eventHandlers={{
-                click: () => onMarkerClick?.(note),
-              }}
-            >
-              <Popup>
-                <div style={{ minWidth: "200px" }}>
-                  <h6 className="fw-bold mb-2">{note.title}</h6>
-                  <p className="mb-1">
-                    <strong>📍</strong> {note.location}
-                  </p>
-                  <p className="mb-1">
-                    <strong>📅</strong>{" "}
-                    {new Date(note.date_visited).toLocaleDateString("it-IT")}
-                  </p>
-                  {note.mood && (
-                    <p className="mb-1">
-                      <strong>😊</strong> {note.mood}
-                    </p>
-                  )}
-                  {note.actual_expense && (
-                    <p className="mb-2">
-                      <strong>💶</strong> €{note.actual_expense}
-                    </p>
-                  )}
-                  <button
-                    className="btn btn-sm btn-primary w-100"
-                    onClick={() => onMarkerClick?.(note)}
-                  >
-                    Vedi dettagli
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {notesWithCoords.map((note) => {
+            const distance = getDistance(note);
+
+            return (
+              <Marker
+                key={note.id}
+                position={[note.latitude, note.longitude]}
+                icon={travelIcon}
+                eventHandlers={{
+                  click: () => onMarkerClick?.(note),
+                }}
+              >
+                {/* TOOLTIP AL PASSAGGIO DEL MOUSE */}
+                <Tooltip
+                  direction="top"
+                  offset={[0, -10]}
+                  opacity={0.9}
+                  permanent={false}
+                  sticky={true}
+                >
+                  <div style={{ minWidth: "200px", fontSize: "1rem" }}>
+                    <div className="fw-bold">
+                      <strong>📍</strong> {note.location} - {note.title}
+                    </div>
+                    {distance && (
+                      <div className="text-primary">
+                        <strong>🛣️ a {distance} da te</strong>
+                      </div>
+                    )}
+                    <div>
+                      <strong>📅</strong>{" "}
+                      {new Date(note.date_visited).toLocaleDateString("it-IT")}
+                    </div>
+                  </div>
+                </Tooltip>
+                <Popup>
+                  <div style={{ minWidth: "220px" }}>
+                    <h6 className="fw-bold mb-2">{note.title}</h6>
+                    <button
+                      className="btn btn-sm btn-primary w-100"
+                      onClick={() => onMarkerClick?.(note)}
+                    >
+                      Vedi dettagli completi
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
         </MapContainer>
       </div>
     </div>
