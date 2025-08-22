@@ -64,7 +64,7 @@ export default function DetailModal({ note, show, onClose, placeHolder }) {
                   <h6 className="text-muted mb-1">Mood</h6>
                   <p>
                     {note.mood && (
-                      <span className="badge bg-body-secondary text-dark">
+                      <span className="badge bg-white text-dark">
                         {getMoodEmoji(note.mood)} {note.mood}
                       </span>
                     )}
@@ -89,7 +89,7 @@ export default function DetailModal({ note, show, onClose, placeHolder }) {
                       <h6 className="text-success mb-2">
                         👍 Cosa ti è piaciuto
                       </h6>
-                      <div className="bg-body-secondary p-3 rounded">
+                      <div className="bg-white p-3 rounded">
                         <p className="mb-0">{note.positive_reflection}</p>
                       </div>
                     </div>
@@ -97,7 +97,7 @@ export default function DetailModal({ note, show, onClose, placeHolder }) {
                   {note.negative_reflection && (
                     <div className="col-md-6">
                       <h6 className="text-warning mb-2">👎 Cosa migliorare</h6>
-                      <div className="bg-body-secondary p-3 rounded">
+                      <div className="bg-white p-3 rounded">
                         <p className="mb-0">{note.negative_reflection}</p>
                       </div>
                     </div>
@@ -125,19 +125,19 @@ export default function DetailModal({ note, show, onClose, placeHolder }) {
               {/* STATS */}
               <div className="row text-center">
                 <div className="col-3">
-                  <div className="bg-body-secondary p-3 rounded">
+                  <div className="bg-white p-3 rounded">
                     <h6 className="text-muted mb-1">💪 Fisico</h6>
                     <h4 className="text-primary">{note.physical_effort}/5</h4>
                   </div>
                 </div>
                 <div className="col-3">
-                  <div className="bg-body-secondary p-3 rounded">
+                  <div className="bg-white p-3 rounded">
                     <h6 className="text-muted mb-1">💰 Economico</h6>
                     <h4 className="text-warning">{note.economic_effort}/5</h4>
                   </div>
                 </div>
                 <div className="col-3">
-                  <div className="bg-body-secondary p-3 rounded">
+                  <div className="bg-white p-3 rounded">
                     <h6 className="text-muted mb-1">💶 Spesa</h6>
                     <h4 className="text-success">
                       {note.actual_expense
@@ -147,7 +147,7 @@ export default function DetailModal({ note, show, onClose, placeHolder }) {
                   </div>
                 </div>
                 <div className="col-3">
-                  <div className="bg-body-secondary p-3 rounded">
+                  <div className="bg-white p-3 rounded">
                     <h6 className="text-muted mb-1">📊 Rating</h6>
                     <h4 className="text-info">
                       {(

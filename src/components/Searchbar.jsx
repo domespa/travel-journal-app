@@ -149,7 +149,6 @@ export default function Searchbar({
                   <option value="🤯 Sorpreso">🤯 Sorpreso</option>
                 </select>
               </div>
-
               {/* FILTRO TAGS */}
               <div className="col-md-6 col-lg-3">
                 <label className="form-label">🏷️ Tags</label>
