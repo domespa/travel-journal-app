@@ -27,3 +27,9 @@ react router e con useNavigate navigare per le pagine ma ho preferito cambiare.
 GIORNO 4
 Aggiunta una funzione per localizzare la posizione del nostro utente,
 Con reactleaflet ho messo una mappa dove si riesce a tenere traccia dei viaggi e della posizione corrente.
+
+GIORNO 5
+Grazie al metodo di haversine ho gestito le distante da punto a punto.
+Aumentata logica sella searchbar per gestire i filtri
+Ultimate modifiche generali di layout.
+Deployato con successo
