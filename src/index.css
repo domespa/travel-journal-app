@@ -108,7 +108,7 @@ header {
 /* =====================================
             MODAL
 ===================================== */
-
+.card-header,
 .modal-header.bg-primary {
   background-color: #38673a !important;
 }
